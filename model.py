@@ -1,3 +1,6 @@
+import torch
+from torch import nn
+
 class MNISTModel(nn.Module):
     """Model with input size (-1, 28, 28) for MNIST dataset."""
 

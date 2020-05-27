@@ -2,10 +2,10 @@ import argparse
 
 import torch
 from torch import optim, nn
-from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+from model import MNISTModel
 
-#SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 
 def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
@@ -54,6 +54,8 @@ def main():
                         help='learning rate (default: 0.01)')
     parser.add_argument('--wd', type=float, default=1e-6, metavar='WD',
                         help='Weight decay (default: 1e-6)')
+    parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
+                        help='momentum (default: 0.9)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
     parser.add_argument('--log-interval', type=int, default=10, metavar='N',
@@ -70,22 +72,25 @@ def main():
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
 
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         datasets.MNIST('../data', train=True, download=True,
                        transform=transforms.Compose([
                            transforms.ToTensor(),
                            transforms.Normalize((0.1307,), (0.3081,))
                        ])),
         batch_size=args.batch_size, shuffle=True, **kwargs)
-    test_loader = torch.utils.data.DataLoader(
+    test_loader = DataLoader(
         datasets.MNIST('../data', train=False, transform=transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))
         ])),
         batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
-    model = Net().to(device)
-    optimizer = optim.SGD(model.parameters(), lr=args.lr, weight_decay=args.wd)
+    model = MNISTModel().to(device)
+    optimizer = optim.SGD(model.parameters(), lr=args.lr,
+                          weight_decay=args.wd,
+                          momentum=args.momentum,
+                          nesterov=True)
 
     for epoch in range(1, args.epochs + 1):
         train(args, model, device, train_loader, optimizer, epoch)
