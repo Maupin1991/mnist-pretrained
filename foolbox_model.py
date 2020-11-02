@@ -18,8 +18,8 @@ def create():
     preprocessing = {'mean': 0.5,
                      'std': 0.5}
 
-    fmodel = fb.PytorchModel(model, bounds=(0, 1),
-                             preprocessing=preprocessing,
-                             device=device)
+    fmodel = fb.models.PytorchModel(model, bounds=(0, 1),
+                                    preprocessing=preprocessing,
+                                    device=device)
 
     return fmodel
