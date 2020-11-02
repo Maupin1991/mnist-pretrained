@@ -2,7 +2,6 @@ import foolbox as fb
 import torch
 
 from model import MNISTModel
-from query_counter import PytorchModelCounter
 
 
 def create():
@@ -19,8 +18,8 @@ def create():
     preprocessing = {'mean': 0.5,
                      'std': 0.5}
 
-    fmodel = PytorchModelCounter(model, bounds=(0, 1),
-                                    preprocessing=preprocessing,
-                                    device=device)
+    fmodel = fb.PytorchModel(model, bounds=(0, 1),
+                             preprocessing=preprocessing,
+                             device=device)
 
     return fmodel
