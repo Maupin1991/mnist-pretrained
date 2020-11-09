@@ -21,6 +21,6 @@ def create():
 
     fmodel = PyTorchModel(model, bounds=(0, 1),
                           num_classes=10,
-                          preprocessing=preprocessing)
+                          preprocessing=preprocessing, channel_axis=1)
 
     return fmodel
