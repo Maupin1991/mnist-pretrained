@@ -1,6 +1,8 @@
+"""
+Model trained with https://github.com/louis2889184/pytorch-adversarial-training
+"""
 import foolbox as fb
 import torch
-from foolbox.models import PyTorchModel
 
 from model import MNISTModel
 
@@ -8,7 +10,7 @@ from model import MNISTModel
 def create():
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     weights_path = fb.zoo.fetch_weights(
-        'https://github.com/Maupin1991/mnist-pretrained/releases/download/v1.1/mnist_cnn.pt',
+        'https://github.com/maurapintor/mnist-pretrained/releases/download/v1.2/mnist_challenge.pt',
         unzip=False
     )
     model = MNISTModel()
@@ -19,8 +21,8 @@ def create():
     preprocessing = {'mean': 0.5,
                      'std': 0.5}
 
-    fmodel = PyTorchModel(model, bounds=(0, 1),
-                          num_classes=10,
-                          preprocessing=preprocessing, channel_axis=1)
+    fmodel = fb.models.PyTorchModel(model, bounds=(0, 1),
+                                    preprocessing=preprocessing,
+                                    device=device)
 
     return fmodel
